@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -31,7 +32,15 @@ class UserController extends Controller
     {
         // TASK: find a user by $name and $email
         //   if not found, create a user with $name, $email and random password
-        $user = NULL;
+        $user = User::firstOrCreate([
+            'name' => $name,
+            'email' => $email
+        ],
+            [
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make(fake()->password)
+            ]);
 
         return view('users.show', compact('user'));
     }
